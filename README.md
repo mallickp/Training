@@ -14,7 +14,7 @@ This is a sample spring boot application that makes use of SAP HANA Service on S
 * Clone repo -
 
     ```
-    git clone https://github.com/boudhayan-dev/spring-hana-cloud-foundry
+    git clone [https://github.com/mallickp/Training]
     ```
 * For local -
 
