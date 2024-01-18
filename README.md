@@ -32,7 +32,9 @@ This is a sample spring boot application that makes use of SAP HANA Service on S
     ```
     * Deploy the app -
     ```
-    cf push
+    cf login -a <API End Point>
+
+    cf push <APP_Name>
     ```
 
 ### Test
