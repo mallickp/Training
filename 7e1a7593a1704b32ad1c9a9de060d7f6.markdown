@@ -1,0 +1,837 @@
+What is Maven?
+
+Maven is a project management and comprehension tool that provides
+developers a complete build lifecycle framework. Development team can
+automate the project\'s build infrastructure in almost no time as Maven
+uses a standard directory layout and a default build lifecycle.
+
+In case of multiple development teams environment, Maven can set-up the
+way to work as per standards in a very short time. As most of the
+project setups are simple and reusable, Maven makes life of developer
+easy while creating reports, checks, build and testing automation
+setups.
+
+Maven provides developers ways to manage the following −
+
+-   Builds
+
+-   Documentation
+
+-   Reporting
+
+-   Dependencies
+
+-   SCMs
+
+-   Releases
+
+-   Distribution
+
+-   Mailing list
+
+To summarize, Maven simplifies and standardizes the project build
+process. It handles compilation, distribution, documentation, team
+collaboration and other tasks seamlessly. Maven increases reusability
+and takes care of most of the build related tasks.
+
+JDBC stands for **Java Database Connectivity**. It provides a set of
+Java API for accessing the relational databases from Java program. These
+Java APIs enables Java programs to execute SQL statements and interact
+with any SQL compliant database.
+
+JDBC provides a flexible architecture to write a database independent
+application that can run on different platforms and interact with
+different DBMS without any modification.
+
+Pros and Cons of JDBC
+
++--------------------------------+-------------------------------------+
+| **Pros of JDBC**               | **Cons of JDBC**                    |
++================================+=====================================+
+| Clean and simple SQL           | Complex if it is used in large      |
+| processing                     | projects                            |
+|                                |                                     |
+| Good performance with large    | Large programming overhead          |
+| data                           |                                     |
+|                                | No encapsulation                    |
+| Very good for small            |                                     |
+| applications                   | Hard to implement MVC concept       |
+|                                |                                     |
+| Simple syntax so easy to learn | Query is DBMS specific              |
++--------------------------------+-------------------------------------+
+
+# JPA Providers
+
+JPA is an open-source API, therefore various enterprise vendors such as
+Oracle, Redhat, Eclipse, etc. provide new products by adding the JPA
+persistence flavor to them. Some of these products include:
+
+Hibernate, EclipseLink, TopLink, MyBatis, etc.
+
+Hibernate is the most popular ORM framework and implementation of JPA.
+
+# What are the advantages of JPA?
+
+The advantages of JPA are given below.
+
+-   We no need to create SQL statements if we use JPA. We directly
+    persist an object into the database.
+
+```{=html}
+<!-- -->
+```
+-   The burden of interacting with the database reduces significantly by
+    using JPA
+
+```{=html}
+<!-- -->
+```
+-   The user programming becomes easy by concealing the O/R mapping and
+    database access processing
+
+```{=html}
+<!-- -->
+```
+-   The cost of creating the definition file is reduced by using
+    annotations
+
+```{=html}
+<!-- -->
+```
+-   We can merge the applications used with other JPA providers
+
+```{=html}
+<!-- -->
+```
+-   Using different implementations can add the features to the standard
+    Implementation which can later be the part of JPA specification
+
+Hibernate:
+
+Hibernate is a java based ORM tool that provides a framework for mapping
+application domain objects to the relational database tables and vice
+versa.
+
+Hibernate is probably the most popular JPA implementation and one of the
+most popular Java frameworks in general. Hibernate acts as an additional
+layer on top of JDBC and enables you to implement a database-independent
+persistence layer. It provides an object-relational mapping
+implementation that maps your database records to Java objects and
+generates the required SQL statements to replicate all operations to the
+database.
+
+**Example**: Below diagram shows an *Object Relational Mapping* between
+the **Student** Java class and the **students** table in the database.
+
+![](vertopal_7e1a7593a1704b32ad1c9a9de060d7f6/media/image1.png){width="6.268055555555556in"
+height="2.390972222222222in"}
+
+spring.datasource.url=jdbc:h2:file:/Users/i311077/Downloads/spring-hana-cloud-foundry-master_18jan/src/main/data/demo
+
+spring.datasource.url=jdbc:h2:mem:testdb
+
+<http://localhost:8080/h2-console>
+
+How to create CRUD App.
+
+Create Employee class to represent database table Employee
+
+import lombok.\*;
+
+import javax.persistence.\*;
+
+\@Setter
+
+\@Getter
+
+\@AllArgsConstructor
+
+\@NoArgsConstructor
+
+\@Builder
+
+\@Entity
+
+\@Table(name = \"employees\")
+
+public class Employee {
+
+\@Id
+
+\@GeneratedValue(strategy = GenerationType.IDENTITY)
+
+private long id;
+
+\@Column(name = \"first_name\", nullable = false)
+
+private String firstName;
+
+\@Column(name = \"last_name\", nullable = false)
+
+private String lastName;
+
+\@Column(nullable = false)
+
+private String email;
+
+}
+
+Note that we are using Lombok annotations to reduce the boilerplate
+code.
+
+\@Entity annotation is used to mark the class as a persistent Java
+class.
+
+\@Table annotation is used to provide the details of the table that this
+entity will be mapped to.
+
+\@Id annotation is used to define the primary key.
+
+\@GeneratedValue annotation is used to define the primary key generation
+strategy. In the above case, we have declared the primary key to be an
+Auto Increment field.
+
+\@Column annotation is used to define the properties of the column that
+will be mapped to the annotated field. You can define several properties
+like name, length, nullable, updateable, etc.
+
+![](vertopal_7e1a7593a1704b32ad1c9a9de060d7f6/media/image2.png){width="5.361111111111111in"
+height="1.4027777777777777in"}
+
+# 4. Create Repository Layer
+
+Let\'s create EmployeeRepository which extends
+the JpaRepository interface:
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface EmployeeRepository extends JpaRepository\<Employee,
+Long\> {
+
+}
+
+# 5. Create Service Layer
+
+## EmployeeService
+
+Let\'s create an EmployeeService interface with CRUD methods:
+
+import java.util.List;
+
+import java.util.Optional;
+
+public interface EmployeeService {
+
+Employee saveEmployee(Employee employee);
+
+List\<Employee\> getAllEmployees();
+
+Optional\<Employee\> getEmployeeById(long id);
+
+Employee updateEmployee(Employee updatedEmployee);
+
+void deleteEmployee(long id);
+
+}
+
+## EmployeeServiceImpl
+
+Let\'s create an EmployeeServiceImpl class that implements
+the EmployeeService interface:
+
+import org.springframework.beans.factory.annotation.Autowired;
+
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+import java.util.Optional;
+
+\@Service
+
+public class EmployeeServiceImpl implements EmployeeService {
+
+private EmployeeRepository employeeRepository;
+
+public EmployeeServiceImpl(EmployeeRepository employeeRepository) {
+
+this.employeeRepository = employeeRepository;
+
+}
+
+\@Override
+
+public Employee saveEmployee(Employee employee) {
+
+Optional\<Employee\> savedEmployee =
+employeeRepository.findByEmail(employee.getEmail());
+
+if(savedEmployee.isPresent()){
+
+throw new ResourceNotFoundException(\"Employee already exist with given
+email:\" + employee.getEmail());
+
+}
+
+return employeeRepository.save(employee);
+
+}
+
+\@Override
+
+public List\<Employee\> getAllEmployees() {
+
+return employeeRepository.findAll();
+
+}
+
+\@Override
+
+public Optional\<Employee\> getEmployeeById(long id) {
+
+return employeeRepository.findById(id);
+
+}
+
+\@Override
+
+public Employee updateEmployee(Employee updatedEmployee) {
+
+return employeeRepository.save(updatedEmployee);
+
+}
+
+\@Override
+
+public void deleteEmployee(long id) {
+
+employeeRepository.deleteById(id);
+
+}
+
+}
+
+# 6. Controller Layer - CRUD REST APIs
+
+Let\'s create CRUD REST APIs for creating, retrieving, updating, and
+deleting an Employee:
+
+import org.springframework.http.HttpStatus;
+
+import org.springframework.http.ResponseEntity;
+
+import org.springframework.web.bind.annotation.\*;
+
+import java.util.List;
+
+\@RestController
+
+\@RequestMapping(\"/api/employees\")
+
+public class EmployeeController {
+
+private EmployeeService employeeService;
+
+public EmployeeController(EmployeeService employeeService) {
+
+this.employeeService = employeeService;
+
+}
+
+\@PostMapping
+
+\@ResponseStatus(HttpStatus.CREATED)
+
+public Employee createEmployee(@RequestBody Employee employee){
+
+return employeeService.saveEmployee(employee);
+
+}
+
+\@GetMapping
+
+public List\<Employee\> getAllEmployees(){
+
+return employeeService.getAllEmployees();
+
+}
+
+\@GetMapping(\"{id}\")
+
+public ResponseEntity\<Employee\> getEmployeeById(@PathVariable(\"id\")
+long employeeId){
+
+return employeeService.getEmployeeById(employeeId)
+
+.map(ResponseEntity::ok)
+
+.orElseGet(() -\> ResponseEntity.notFound().build());
+
+}
+
+\@PutMapping(\"{id}\")
+
+public ResponseEntity\<Employee\> updateEmployee(@PathVariable(\"id\")
+long employeeId,
+
+\@RequestBody Employee employee){
+
+return employeeService.getEmployeeById(employeeId)
+
+.map(savedEmployee -\> {
+
+savedEmployee.setFirstName(employee.getFirstName());
+
+savedEmployee.setLastName(employee.getLastName());
+
+savedEmployee.setEmail(employee.getEmail());
+
+Employee updatedEmployee =
+employeeService.updateEmployee(savedEmployee);
+
+return new ResponseEntity\<\>(updatedEmployee, HttpStatus.OK);
+
+})
+
+.orElseGet(() -\> ResponseEntity.notFound().build());
+
+}
+
+\@DeleteMapping(\"{id}\")
+
+public ResponseEntity\<String\> deleteEmployee(@PathVariable(\"id\")
+long employeeId){
+
+employeeService.deleteEmployee(employeeId);
+
+return new ResponseEntity\<String\>(\"Employee deleted successfully!.\",
+HttpStatus.OK);
+
+}
+
+}
+
+# 7. Writing Unit Tests for CRUD REST API\'s
+
+Now, let\'s create Unit test cases for **CRUD **REST APIs. We gonna use
+the @WebMvcTest annotation to load only EmployeeController class.
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import org.junit.jupiter.api.Test;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
+import
+org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+
+import org.springframework.boot.test.mock.mockito.MockBean;
+
+import org.springframework.http.MediaType;
+
+import org.springframework.test.web.servlet.MockMvc;
+
+import org.springframework.test.web.servlet.ResultActions;
+
+import java.util.ArrayList;
+
+import java.util.List;
+
+import java.util.Optional;
+
+import static org.hamcrest.CoreMatchers.is;
+
+import static
+org.springframework.test.web.servlet.result.MockMvcResultMatchers.\*;
+
+import static
+org.springframework.test.web.servlet.result.MockMvcResultHandlers.\*;
+
+import static org.mockito.ArgumentMatchers.\*;
+
+import static org.mockito.BDDMockito.\*;
+
+import static
+org.springframework.test.web.servlet.request.MockMvcRequestBuilders.\*;
+
+\@WebMvcTest
+
+public class EmployeeControllerTests {
+
+\@Autowired
+
+private MockMvc mockMvc;
+
+\@MockBean
+
+private EmployeeService employeeService;
+
+\@Autowired
+
+private ObjectMapper objectMapper;
+
+\@Test
+
+public void
+givenEmployeeObject_whenCreateEmployee_thenReturnSavedEmployee() throws
+Exception{
+
+// given - precondition or setup
+
+Employee employee = Employee.builder()
+
+.firstName(\"Ramesh\")
+
+.lastName(\"Fadatare\")
+
+.email(\"ramesh@gmail.com\")
+
+.build();
+
+given(employeeService.saveEmployee(any(Employee.class)))
+
+.willAnswer((invocation)-\> invocation.getArgument(0));
+
+// when - action or behaviour that we are going test
+
+ResultActions response = mockMvc.perform(post(\"/api/employees\")
+
+.contentType(MediaType.APPLICATION_JSON)
+
+.content(objectMapper.writeValueAsString(employee)));
+
+// then - verify the result or output using assert statements
+
+response.andDo(print()).
+
+andExpect(status().isCreated())
+
+.andExpect(jsonPath(\"\$.firstName\",
+
+is(employee.getFirstName())))
+
+.andExpect(jsonPath(\"\$.lastName\",
+
+is(employee.getLastName())))
+
+.andExpect(jsonPath(\"\$.email\",
+
+is(employee.getEmail())));
+
+}
+
+// JUnit test for Get All employees REST API
+
+\@Test
+
+public void
+givenListOfEmployees_whenGetAllEmployees_thenReturnEmployeesList()
+throws Exception{
+
+// given - precondition or setup
+
+List\<Employee\> listOfEmployees = new ArrayList\<\>();
+
+listOfEmployees.add(Employee.builder().firstName(\"Ramesh\").lastName(\"Fadatare\").email(\"ramesh@gmail.com\").build());
+
+listOfEmployees.add(Employee.builder().firstName(\"Tony\").lastName(\"Stark\").email(\"tony@gmail.com\").build());
+
+given(employeeService.getAllEmployees()).willReturn(listOfEmployees);
+
+// when - action or the behaviour that we are going test
+
+ResultActions response = mockMvc.perform(get(\"/api/employees\"));
+
+// then - verify the output
+
+response.andExpect(status().isOk())
+
+.andDo(print())
+
+.andExpect(jsonPath(\"\$.size()\",
+
+is(listOfEmployees.size())));
+
+}
+
+// positive scenario - valid employee id
+
+// JUnit test for GET employee by id REST API
+
+\@Test
+
+public void
+givenEmployeeId_whenGetEmployeeById_thenReturnEmployeeObject() throws
+Exception{
+
+// given - precondition or setup
+
+long employeeId = 1L;
+
+Employee employee = Employee.builder()
+
+.firstName(\"Ramesh\")
+
+.lastName(\"Fadatare\")
+
+.email(\"ramesh@gmail.com\")
+
+.build();
+
+given(employeeService.getEmployeeById(employeeId)).willReturn(Optional.of(employee));
+
+// when - action or the behaviour that we are going test
+
+ResultActions response = mockMvc.perform(get(\"/api/employees/{id}\",
+employeeId));
+
+// then - verify the output
+
+response.andExpect(status().isOk())
+
+.andDo(print())
+
+.andExpect(jsonPath(\"\$.firstName\", is(employee.getFirstName())))
+
+.andExpect(jsonPath(\"\$.lastName\", is(employee.getLastName())))
+
+.andExpect(jsonPath(\"\$.email\", is(employee.getEmail())));
+
+}
+
+// negative scenario - valid employee id
+
+// JUnit test for GET employee by id REST API
+
+\@Test
+
+public void givenInvalidEmployeeId_whenGetEmployeeById_thenReturnEmpty()
+throws Exception{
+
+// given - precondition or setup
+
+long employeeId = 1L;
+
+Employee employee = Employee.builder()
+
+.firstName(\"Ramesh\")
+
+.lastName(\"Fadatare\")
+
+.email(\"ramesh@gmail.com\")
+
+.build();
+
+given(employeeService.getEmployeeById(employeeId)).willReturn(Optional.empty());
+
+// when - action or the behaviour that we are going test
+
+ResultActions response = mockMvc.perform(get(\"/api/employees/{id}\",
+employeeId));
+
+// then - verify the output
+
+response.andExpect(status().isNotFound())
+
+.andDo(print());
+
+}
+
+// JUnit test for update employee REST API - positive scenario
+
+\@Test
+
+public void
+givenUpdatedEmployee_whenUpdateEmployee_thenReturnUpdateEmployeeObject()
+throws Exception{
+
+// given - precondition or setup
+
+long employeeId = 1L;
+
+Employee savedEmployee = Employee.builder()
+
+.firstName(\"Ramesh\")
+
+.lastName(\"Fadatare\")
+
+.email(\"ramesh@gmail.com\")
+
+.build();
+
+Employee updatedEmployee = Employee.builder()
+
+.firstName(\"Ram\")
+
+.lastName(\"Jadhav\")
+
+.email(\"ram@gmail.com\")
+
+.build();
+
+given(employeeService.getEmployeeById(employeeId)).willReturn(Optional.of(savedEmployee));
+
+given(employeeService.updateEmployee(any(Employee.class)))
+
+.willAnswer((invocation)-\> invocation.getArgument(0));
+
+// when - action or the behaviour that we are going test
+
+ResultActions response = mockMvc.perform(put(\"/api/employees/{id}\",
+employeeId)
+
+.contentType(MediaType.APPLICATION_JSON)
+
+.content(objectMapper.writeValueAsString(updatedEmployee)));
+
+// then - verify the output
+
+response.andExpect(status().isOk())
+
+.andDo(print())
+
+.andExpect(jsonPath(\"\$.firstName\",
+is(updatedEmployee.getFirstName())))
+
+.andExpect(jsonPath(\"\$.lastName\", is(updatedEmployee.getLastName())))
+
+.andExpect(jsonPath(\"\$.email\", is(updatedEmployee.getEmail())));
+
+}
+
+// JUnit test for update employee REST API - negative scenario
+
+\@Test
+
+public void givenUpdatedEmployee_whenUpdateEmployee_thenReturn404()
+throws Exception{
+
+// given - precondition or setup
+
+long employeeId = 1L;
+
+Employee savedEmployee = Employee.builder()
+
+.firstName(\"Ramesh\")
+
+.lastName(\"Fadatare\")
+
+.email(\"ramesh@gmail.com\")
+
+.build();
+
+Employee updatedEmployee = Employee.builder()
+
+.firstName(\"Ram\")
+
+.lastName(\"Jadhav\")
+
+.email(\"ram@gmail.com\")
+
+.build();
+
+given(employeeService.getEmployeeById(employeeId)).willReturn(Optional.empty());
+
+given(employeeService.updateEmployee(any(Employee.class)))
+
+.willAnswer((invocation)-\> invocation.getArgument(0));
+
+// when - action or the behaviour that we are going test
+
+ResultActions response = mockMvc.perform(put(\"/api/employees/{id}\",
+employeeId)
+
+.contentType(MediaType.APPLICATION_JSON)
+
+.content(objectMapper.writeValueAsString(updatedEmployee)));
+
+// then - verify the output
+
+response.andExpect(status().isNotFound())
+
+.andDo(print());
+
+}
+
+// JUnit test for delete employee REST API
+
+\@Test
+
+public void givenEmployeeId_whenDeleteEmployee_thenReturn200() throws
+Exception{
+
+// given - precondition or setup
+
+long employeeId = 1L;
+
+willDoNothing().given(employeeService).deleteEmployee(employeeId);
+
+// when - action or the behaviour that we are going test
+
+ResultActions response = mockMvc.perform(delete(\"/api/employees/{id}\",
+employeeId));
+
+// then - verify the output
+
+response.andExpect(status().isOk())
+
+.andDo(print());
+
+}
+
+}
+
+We are using \@MockBean annotation to add mock objects to the Spring
+application context. The mock will replace any existing bean of the same
+type in the application context.
+
+The \@MockBean annotation tells Spring to create a mock instance
+of *EmployeeService* and add it to the application context so that it\'s
+injected into *EmployeeController*. We have a handle on it in the test
+so that we can define its behavior before running each test.
+
+Note that we are using *MockMvc* class to make REST API calls.
+
+We are using *ResultActions* class to handle the response of the REST
+API.
+
+We are using *Mockito* to stub the method calls.
+
+hana.url = \${vcap.services.hana_migration.credentials.url}
+
+hana.user = \${vcap.services.hana_migration.credentials.user}
+
+hana.password = \${vcap.services.hana_migration.credentials.password}
+
+spring.profiles.active=@activatedProperties@
+
+spring.mvc.pathmatch.matching-strategy = ANT_PATH_MATCHER
+
+Pushing to Cloud Foundry
+
+cf login -a [\<API End
+Point\>](https://api.cf.us10-001.hana.ondemand.com)
+
+cf push \<APP_Name\>
+
+JUNIT:
+
+\<plugin\>
+
+\<groupId\>org.apache.maven.plugins\</groupId\>
+
+\<artifactId\>maven-surefire-plugin\</artifactId\>
+
+\<version\>3.0.0-M7\</version\>
+
+\</plugin\>
+
+\<dependency\>
+
+\<groupId\>org.springframework.boot\</groupId\>
+
+\<artifactId\>spring-boot-starter-test\</artifactId\>
+
+\<scope\>test\</scope\>
+
+\</dependency\>
