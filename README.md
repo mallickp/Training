@@ -3,7 +3,7 @@
 This is a sample spring boot application that makes use of SAP HANA Service on SAP Cloud Platform (Cloud Foundry) and local development and testing purpose.
 
 
-* PART 1 - [Developing the application]
+* PART 1 - 
 
 
 ### Requirements 
